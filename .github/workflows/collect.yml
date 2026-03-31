@@ -2,8 +2,9 @@ name: トンネルニュース 自動収集
 
 on:
   schedule:
+    # 毎朝8時 JST = UTC 23:00 (前日)
     - cron: '0 23 * * *'
-  workflow_dispatch:
+  workflow_dispatch:   # 手動実行ボタン
 
 permissions:
   contents: write
@@ -22,11 +23,9 @@ jobs:
           python-version: '3.12'
 
       - name: 依存パッケージをインストール
-        run: pip install anthropic
+        run: pip install requests beautifulsoup4
 
       - name: ニュースを収集して HTML を生成
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scraper.py
 
       - name: 結果を GitHub にコミット・プッシュ
